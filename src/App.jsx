@@ -29,21 +29,27 @@ export default function App() {
     })();
   }, []);
 
-  const test = () => {
+  const filter = () => {
     const genre = filterGenre.current.value
     if (genre === '') {
       s.filter = s.movies
     } else {
-      s.filter = s.movies.filter(movie => movie.description.categories.includes(genre))
+      const filterMovies = s.movies.filter(movie => movie.description.categories.includes(genre)).length
+      if(filterMovies === 0) {
+        filterGenre.current.value = ''
+        return
+      } else {
+        s.filter = s.movies.filter(movie => movie.description.categories.includes(genre))
+      }
     }
-    // genre.filterGenre.current.value = ''
+    filterGenre.current.value = ''
   }
 
   return s.filter.length === 0 ? null : <>
+        <input ref={filterGenre} type="text" />
+        <button onClick={filter}>Filter Genre</button>
     <Routes>
       <Route path="/" element={<>
-        <input ref={filterGenre} type="text" />
-        <button onClick={test}>Filter Genre</button>
         <MovieList />
       </>}></Route>
       <Route path="/movie-detail/:slug" element={<MovieDetail />} />

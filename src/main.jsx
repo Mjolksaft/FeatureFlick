@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import MovieList from './MovieList'
 import './index.css';
 import './utilities/auto-key-lists';
 import { BrowserRouter } from 'react-router-dom';
