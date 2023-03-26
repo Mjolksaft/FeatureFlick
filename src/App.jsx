@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from 'react';
+import { useStates } from './utilities/states';
+import MovieList from './MovieList';
+import MovieDetail from './MovieDetail';
+import { Routes, Route } from 'react-router-dom';
+import { kebabify } from './utilities/kebabify';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+  const s = useStates('main', {
+    movies: [],
+    screenings: [],
+  });
+
+  useEffect(() => {
+    (async () => {
+      // fetch alll movies from the REST api
+      let screenings = await(await fetch('/api/screenings')).json()
+      let movies = await (await fetch('/api/movies')).json();
+      // add a slug to be used in url routes to each movie
+      for (let movie of movies) {
+        movie.slug = kebabify(movie.title);
+      }
+      // store the movies in our state variable
+      s.movies = movies;
+      s.screenings = screenings
+    })();
+  }, []);
+
+  return s.movies.length === 0 ? null : <>
+    <Routes>
+      <Route path="/" element={<MovieList />}></Route>
+      <Route path="/movie-detail/:slug" element={<MovieDetail />} />
+    </Routes>
+  </>;
 }
-
-export default App
