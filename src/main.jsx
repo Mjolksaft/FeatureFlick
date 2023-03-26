@@ -5,6 +5,10 @@ import './index.css';
 import './utilities/auto-key-lists';
 import { BrowserRouter } from 'react-router-dom';
 
+const handleClick = () => {
+  console.log("hello world");
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>

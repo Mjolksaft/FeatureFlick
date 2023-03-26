@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useStates } from './utilities/states';
 import MovieList from './MovieList';
 import MovieDetail from './MovieDetail';
+import Filter from './filter'
 import { Routes, Route } from 'react-router-dom';
 import { kebabify } from './utilities/kebabify';
 
@@ -27,9 +28,14 @@ export default function App() {
     })();
   }, []);
 
-  return s.movies.length === 0 ? null : <>
+  //returns to main.jsx to then display in index.html
+  return s.movies.length === 0 ? null : <> 
+
     <Routes>
-      <Route path="/" element={<MovieList />}></Route>
+      <Route path="/" element={<>
+        <Filter />
+        <MovieList />
+      </>}></Route>
       <Route path="/movie-detail/:slug" element={<MovieDetail />} />
     </Routes>
   </>;
